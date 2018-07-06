@@ -1,0 +1,41 @@
+div {
+  text-align: center;  
+}
+
+.fcontainer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  margin: 30px;
+}
+
+.bar-chart {
+  width: 500px;
+  height: 350px;
+}
+
+.parl {
+  display: block;
+  margin: auto;
+  width: 600px;
+  height: 350px;
+}
+
+svg .seat.For { fill: #00FF00; }
+svg .seat.Against { fill: #FF0000; }
+svg .seat.Neutral { fill: #AAAAAA; }
+
+svg .seat.disabled { fill: #EEEEEE; }
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  line-height: 30px;
+  background-color: #f5f5f5;
+  padding: 10px;
+}
