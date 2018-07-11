@@ -42,16 +42,52 @@ function parl_graph(vote_data) {
     data_parl.push(data_group);
   }
 
-  parliament.enter.fromCenter(true).smallToBig(true);
-  parliament.exit.toCenter(true).bigToSmall(true);
+  parliament.enter.fromCenter(false).smallToBig(false);
 
-  d3.select('.parl').datum(data_parl).call(d => {
-    parliament(d);
-    d3.selectAll('.seat').each(function(e) {
-      this.classList.add(e.data['position']);
-    }).append("svg:title").text(d =>  d.data['group'] + ' ' + d.data['mep'] +
-                                ': ' + d.data['position']); // tooltips
+  d3.select('.parl').datum(data_parl).call(d => { parliament(d); });
+
+  const seats = d3.selectAll('.seat');
+
+  seats.each(function(e) {
+    this.classList.add(e.data['position']);
   });
+
+  // seats tooltips
+  seats.append("svg:title").text(d =>  d.data['group'] + ' ' + d.data['mep'] +
+                                 ': ' + d.data['position']);
+
+  function draw_indicator(e) {
+    const x = e['cartesian']['x'];
+    const y = e['cartesian']['y'];
+
+    let svg;
+    if(e.data['position'] == 'For') {
+      // draw +
+      svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      svg.setAttributeNS(null, 'd', `M${x - 1.2} ${y - 2.8} h2 v2 h2 v2 h-2 v2 h-2 v-2 h-2 v-2 h2 z`);
+    } else if (e.data['position'] == 'Against') {
+      // draw -
+      svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      svg.setAttributeNS(null, 'd', `M${x - 1.7} ${y - 1} h4 v2 h-4 v-2 z`);
+    } else {
+      // draw o
+      svg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      svg.setAttributeNS(null, 'fill', 'black');
+      svg.setAttributeNS(null, "cx", x);
+      svg.setAttributeNS(null, "cy", y);
+      svg.setAttributeNS(null, "r", 2);
+    }
+
+    svg.setAttribute('class', 'seatDecorator');
+
+    const tooltip = document.createElementNS('http://www.w3.org/2000/svg','title');
+    tooltip.innerHTML = e.data['group'] + ' ' + e.data['mep'] + ': ' + e.data['position'];
+    svg.appendChild(tooltip);
+
+    this.parentNode.insertBefore(svg, this.nextSibling);
+  }
+
+  seats.each(draw_indicator);
 }
 
 load_data(function(data) {
