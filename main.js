@@ -3,9 +3,9 @@
 const parliament_left_to_right = [
   'GUE/NGL',
   'S&D',
-  'Verts/ALE',
+  'Greens/EFA',
   'ALDE',
-  'PPE',
+  'EPP',
   'ECR',
   'EFDD',
   'ENF',
@@ -15,9 +15,9 @@ const parliament_left_to_right = [
 const parliament_colors = {
   'GUE/NGL': '#990000',
   'S&D': '#F0001C',
-  'Verts/ALE':'#99CC33',
+  'Greens/EFA':'#99CC33',
   'ALDE': '#FFD700',
-  'PPE': '#3399FF',
+  'EPP': '#3399FF',
   'ECR': '#0054A5',
   'EFDD': '#24B9B9',
   'ENF': '#2B3856',
