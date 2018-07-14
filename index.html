@@ -4,7 +4,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.16.0/slimselect.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-1.39.0.min.js"></script>
-  <script src="./d3-parliament.min.js"></script>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.16.0/slimselect.min.css">
@@ -13,6 +12,7 @@
 
 <body>
 
+  <script src="parlayout.js"></script>
   <script src="utils.js"></script>
   <script src="main.js"></script>
 
@@ -23,9 +23,7 @@
       <select id="mep-select" multiple></select>
     </div>
 
-    <div class="">
-      <svg class="parl"></svg> <span style="color: #888888">(Note that the visualization is purely indicative and does not reflect the actual seating of the members)</span>
-    </div>
+    <svg class="parl"></svg>
 
     <div class="fcontainer">
       <span id="by_group" class="bar-chart"></span>
@@ -39,7 +37,6 @@
         <span style="font-size: large">Made by <a href="https://jorquera.net">Tom Jorquera</a></span> using the following libraries:
         <a href="http://getbootstrap.com/">Bootstrap</a>,
         <a href="https://d3js.org/">D3</a>,
-        <a href="https://github.com/geoffreybr/d3-parliament">d3-parliament</a>, 
         <a href="https://plot.ly/plotly-js-scientific-d3-charting-library/">Plotly.js</a> and
         <a href="http://slimselectjs.com/">Slim Select</a>
       </div>

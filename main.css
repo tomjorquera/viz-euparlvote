@@ -17,15 +17,17 @@ div {
 .parl {
   display: block;
   margin: auto;
-  width: 600px;
-  height: 350px;
 }
 
-svg .seat.For { fill: #00FF00; }
-svg .seat.Against { fill: #FF0000; }
-svg .seat.Neutral { fill: #AAAAAA; }
+.seatDisplay { fill: #BBBBBB22; }
+.For .seatDisplay { fill: #00FF00; }
+.Against .seatDisplay { fill: #FF0000; }
+.Neutral .seatDisplay { fill: #AAAAAA; }
+.disabled .seatDisplay { fill: #BBBBBB22; }
 
-svg .seat.disabled { fill: #EEEEEE; }
+.seatDecorator { fill: #000000; }
+.disabled .seatDecorator { fill: #BBBBBB22; }
+
 html {
   position: relative;
   min-height: 100%;

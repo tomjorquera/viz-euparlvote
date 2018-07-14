@@ -19,75 +19,79 @@ const position_top_to_bottom = [
 ];
 
 function parl_graph(vote_data) {
-  const parliament = d3.parliament().width(600).innerRadiusCoef(0.4);
 
-  const data_parl = [];
-  for (const group of parliament_left_to_right) {
-    const data_group = {
-      id: group,
-      seats: [],
-    };
+  const svg = d3.select('svg');
 
-    for (const position of position_top_to_bottom) {
-      const filtered_data = vote_data.filter(d => d['group'] == group &&
-                                             d['position'] == position);
+  d3.json("./layout-stra.json").then(
+    layout => parlayout(svg, 800, layout)
+  ).then(() => {
+    const data_parl = [];
+    for (const group of parliament_left_to_right) {
+      const data_group = {
+        id: group,
+        seats: [],
+      };
 
-      if (filtered_data) {
-        for (const entry of filtered_data) {
-          data_group.seats.push(entry);
+      for (const position of position_top_to_bottom) {
+        const filtered_data = vote_data.filter(d => d['group'] == group &&
+                                               d['position'] == position);
+
+        if (filtered_data) {
+          for (const entry of filtered_data) {
+            data_group.seats.push(entry);
+          }
         }
       }
+
+      data_parl.push(data_group);
     }
 
-    data_parl.push(data_group);
-  }
+    const circles =d3.selectAll('circle').filter('.seat').each(function(e){
+      this.classList.add('seatDisplay');
+    });
 
-  parliament.enter.fromCenter(false).smallToBig(false);
+    const seats_circles = d3.selectAll('g').filter('.seat').data(vote_data, d => d.seat);
 
-  d3.select('.parl').datum(data_parl).call(d => { parliament(d); });
+    seats_circles.each(function(e) {
+      this.classList.add(e.position);
+    });
 
-  const seats = d3.selectAll('.seat');
+    // seats tooltips
+    seats_circles.append("svg:title").text(d =>  d['group'] + ' ' + d['first_name']
+                                           + ' ' + d['last_name'] + ': ' + d['position']);
 
-  seats.each(function(e) {
-    this.classList.add(e.data['position']);
+    function draw_indicator(e) {
+      let svg;
+      if(e['position'] == 'For') {
+        // draw +
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        svg.setAttributeNS(null, 'd', `M${-1.2} ${-2.8} h2 v2 h2 v2 h-2 v2 h-2 v-2 h-2 v-2 h2 z`);
+      } else if (e['position'] == 'Against') {
+        // draw -
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        svg.setAttributeNS(null, 'd', `M${-1.7} ${-1} h4 v2 h-4 v-2 z`);
+      } else {
+        // draw o
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        svg.setAttributeNS(null, 'fill', 'black');
+        svg.setAttributeNS(null, "cx", 0);
+        svg.setAttributeNS(null, "cy", 0);
+        svg.setAttributeNS(null, "r", 2);
+      }
+
+      svg.setAttribute('class', 'seatDecorator');
+
+      const tooltip = document.createElementNS('http://www.w3.org/2000/svg','title');
+      tooltip.innerHTML = e['group'] + ' ' + e['first_name'] + ' ' + e['last_name'] + ': ' + e['position'];
+      svg.appendChild(tooltip);
+
+      this.append(svg);
+    }
+
+    d3.selectAll('g').filter('.seat').data(vote_data, d => d.seat).each(draw_indicator);
+    d3.selectAll('g').filter('.seat').filter(function(x) {}).data(vote_data, d => d.seat).each(draw_indicator);
+
   });
-
-  // seats tooltips
-  seats.append("svg:title").text(d =>  d.data['group'] + ' ' + d.data['mep'] +
-                                 ': ' + d.data['position']);
-
-  function draw_indicator(e) {
-    const x = e['cartesian']['x'];
-    const y = e['cartesian']['y'];
-
-    let svg;
-    if(e.data['position'] == 'For') {
-      // draw +
-      svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      svg.setAttributeNS(null, 'd', `M${x - 1.2} ${y - 2.8} h2 v2 h2 v2 h-2 v2 h-2 v-2 h-2 v-2 h2 z`);
-    } else if (e.data['position'] == 'Against') {
-      // draw -
-      svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      svg.setAttributeNS(null, 'd', `M${x - 1.7} ${y - 1} h4 v2 h-4 v-2 z`);
-    } else {
-      // draw o
-      svg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      svg.setAttributeNS(null, 'fill', 'black');
-      svg.setAttributeNS(null, "cx", x);
-      svg.setAttributeNS(null, "cy", y);
-      svg.setAttributeNS(null, "r", 2);
-    }
-
-    svg.setAttribute('class', 'seatDecorator');
-
-    const tooltip = document.createElementNS('http://www.w3.org/2000/svg','title');
-    tooltip.innerHTML = e.data['group'] + ' ' + e.data['mep'] + ': ' + e.data['position'];
-    svg.appendChild(tooltip);
-
-    this.parentNode.insertBefore(svg, this.nextSibling);
-  }
-
-  seats.each(draw_indicator);
 }
 
 load_data(function(data) {
@@ -114,7 +118,7 @@ load_data(function(data) {
   select_group.setData(group.map(text => ({ text })));
   select_group.set(group);
 
-  const all_meps = unique(get(vote_data, 'mep')).sort();
+  const all_meps = unique(get(vote_data, 'last_name')).sort();
   const select_mep = new SlimSelect({
     select: '#mep-select',
     showSearch: true,
@@ -148,7 +152,7 @@ function filter_data(select_position, select_group, select_mep, vote_data_orig) 
       select_position.disable();
       select_group.disable();
 
-      vote_data = vote_data.filter(d => selected_meps.incldes(d['mep']));
+      vote_data = vote_data.filter(d => selected_meps.includes(d['last_name']));
     } else {
       select_position.enable();
       select_group.enable();
@@ -163,15 +167,15 @@ function filter_data(select_position, select_group, select_mep, vote_data_orig) 
 }
 
 function update_parl(positions, groups, meps) {
-  d3.selectAll('.seat').each(function(e) {
+  d3.selectAll('g').filter('.seat').each(function(e) {
     if (meps.length > 0) {
-      if (meps.includes(e.data['mep'])) {
+      if (meps.includes(e['last_name'])) {
         this.classList.remove('disabled');
       } else {
         this.classList.add('disabled');
       }
     } else {
-      if (positions.includes(e.data['position']) && groups.includes(e.data['group'])){
+      if (positions.includes(e['position']) && groups.includes(e['group'])){
         this.classList.remove('disabled');
       } else {
         this.classList.add('disabled');
