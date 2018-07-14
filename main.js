@@ -12,6 +12,18 @@ const parliament_left_to_right = [
   'NI'
 ];
 
+const parliament_colors = {
+  'GUE/NGL': '#990000',
+  'S&D': '#F0001C',
+  'Verts/ALE':'#99CC33',
+  'ALDE': '#FFD700',
+  'PPE': '#3399FF',
+  'ECR': '#0054A5',
+  'EFDD': '#24B9B9',
+  'ENF': '#2B3856',
+  'NI': '#C0C0C0',
+}
+
 const position_top_to_bottom = [
   'For',
   'Against',
@@ -190,8 +202,14 @@ function update_charts(vote_data) {
   const count_by_group_by_pos = aggr(groupby(vote_data, 'position'),
                                      d => aggr(groupby(d, 'group'), l => l.length));
 
+
+  const pos_group_plot_data = format_to_plot(count_by_pos_by_group);
+  pos_group_plot_data.forEach(e => e['marker'] = {
+    'color': parliament_colors[e.name]
+  });
+
   create_bar_chart(document.getElementById('by_group'), 'Positions',
-                   format_to_plot(count_by_pos_by_group));
+                   pos_group_plot_data);
   create_bar_chart(document.getElementById('by_position'), 'Groups',
                    format_to_plot(count_by_group_by_pos));
 
