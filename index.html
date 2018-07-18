@@ -5,7 +5,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-1.39.0.min.js"></script>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.16.0/slimselect.min.css">
   <link rel="stylesheet" type="text/css" href="./main.css">
 </head>
@@ -16,34 +15,44 @@
   <script src="utils.js"></script>
   <script src="main.js"></script>
 
-  <main class="'container">
-    <div class="fcontainer">
-      <select id="group-select" multiple></select>
-      <select id="position-select" multiple></select>
-      <select id="mep-select" multiple></select>
+  <main>
+    <div class="selectors">
+      <div class="selector-row">
+        <div class="selector-legend">Filter by group or position</div>
+        <div class="selector-select">
+          <select id="group-select" multiple></select>
+          <select id="position-select" multiple></select>
+        </div>
+      </div>
+      <div class="selector-row">
+        <div class="selector-legend">Or by specific members</div>
+        <div class="selector-select">
+          <select id="mep-select" multiple></select>
+        </div>
+      </div>
     </div>
 
-    <svg class="parl"></svg>
+    <div class="parlgraph">
+      <svg class="parl"></svg>
+    </div>
 
-    <div class="fcontainer">
+    <div class="charts">
       <span id="by_group" class="bar-chart"></span>
       <span id="by_position" class="bar-chart"></span>
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <div>
-        <span style="font-size: large">Made by <a href="https://jorquera.net">Tom Jorquera</a></span> using the following libraries:
-        <a href="http://getbootstrap.com/">Bootstrap</a>,
-        <a href="https://d3js.org/">D3</a>,
-        <a href="https://plot.ly/plotly-js-scientific-d3-charting-library/">Plotly.js</a> and
-        <a href="http://slimselectjs.com/">Slim Select</a>
-      </div>
+  <footer>
+    <div>
+      <span style="font-size: large">Made by <a href="https://jorquera.net">Tom Jorquera</a></span> using the following libraries:
+      <a href="https://d3js.org/">D3</a>,
+      <a href="https://plot.ly/plotly-js-scientific-d3-charting-library/">Plotly.js</a> and
+      <a href="http://slimselectjs.com/">Slim Select</a>
+    </div>
+
+    <div>
       License <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPLv3</a> <a href="https://github.com/tomjorquera/viz-euparlvote"><svg height="32" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a>
     </div>
   </footer>
 
 </body>
-
-
