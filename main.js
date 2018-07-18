@@ -227,6 +227,15 @@ function create_bar_chart(body_element, title, bar_data) {
   });
   // disable click on legend
   body_element.on('plotly_legendclick',function() { return false; });
+
+  Plotly.Plots.resize(body_element);
+  const old_resize = window.onresize;
+  window.onresize = () => {
+    Plotly.Plots.resize(body_element);
+    if (old_resize) {
+      old_resize();
+    }
+  };
 }
 
 function load_data(callback) {

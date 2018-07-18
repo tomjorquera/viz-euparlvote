@@ -3,8 +3,8 @@ function parlayout(svg, width, data) {
     const margin = 0;
     const height = width / 2;
 
-    svg.attr('width', width);
-    svg.attr('height', height);
+    svg.attr('width', 'auto');
+    svg.attr('viewBox', `0 0 ${width} ${height}`);
 
     const seatClasses = 'seat';
 
