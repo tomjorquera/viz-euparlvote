@@ -30,9 +30,11 @@ const position_top_to_bottom = [
   'Neutral'
 ];
 
-function parl_graph(vote_data) {
+function parl_graph(vote_data, callback) {
 
   const svg = d3.select('svg');
+
+  svg.selectAll('*').remove();
 
   d3.json("./layout-stra.json").then(
     layout => parlayout(svg, 800, layout)
@@ -103,14 +105,20 @@ function parl_graph(vote_data) {
     d3.selectAll('g').filter('.seat').data(vote_data, d => d.seat).each(draw_indicator);
     d3.selectAll('g').filter('.seat').filter(function(x) {}).data(vote_data, d => d.seat).each(draw_indicator);
 
+    callback();
   });
 }
 
-load_data(function(data) {
-  const vote_data = data.filter(d => d['vote'] == 'A8 - 0245/2018 - Axel Voss - Décision d\'engager des négociations interinstitutionnelles');
-
+load_data(function(vote_data) {
+  const votes = unique(get(vote_data, 'vote'));
   const positions = unique(get(vote_data, 'position'));
   const group = unique(get(vote_data, 'group'));
+
+  const select_vote = new SlimSelect({
+    select: '#vote-select',
+    showSearch: false,
+    closeOnSelect: true,
+  });
 
   const select_position = new SlimSelect({
     select: '#position-select',
@@ -123,6 +131,9 @@ load_data(function(data) {
     showSearch: true,
     closeOnSelect: false,
   });
+
+  select_vote.setData(votes.map(text => ({ text })));
+  select_vote.set(votes);
 
   select_position.setData(positions.map(text => ({ text })));
   select_position.set(positions);
@@ -140,25 +151,32 @@ load_data(function(data) {
 
   select_mep.setData(select_mep.data.data.concat(all_meps.map(text => ({text}))));
 
-  select_position.onChange = filter_data(select_position, select_group, select_mep, vote_data);
-  select_group.onChange = filter_data(select_position, select_group, select_mep, vote_data);
-  select_mep.onChange = filter_data(select_position, select_group, select_mep, vote_data);
+  select_vote.onChange = () => {
+    parl_graph(vote_data.filter(d => d['vote'] == select_vote.selected()),
+               () => filter_data(select_vote, select_position, select_group, select_mep, vote_data)());
+  };
 
-  update_charts(vote_data);
+  select_position.onChange = filter_data(select_vote, select_position, select_group, select_mep, vote_data);
+  select_group.onChange = filter_data(select_vote, select_position, select_group, select_mep, vote_data);
+  select_mep.onChange = filter_data(select_vote, select_position, select_group, select_mep, vote_data);
 
-  parl_graph(vote_data);
+  parl_graph(vote_data.filter(d => d['vote'] == select_vote.selected()),
+             () => filter_data(select_vote, select_position, select_group, select_mep, vote_data)());
 });
 
 
-function filter_data(select_position, select_group, select_mep, vote_data_orig) {
+function filter_data(select_vote, select_position, select_group, select_mep, vote_data_orig) {
   return () => {
     // clone vote data
     let vote_data = clone(vote_data_orig);
 
+    const selected_vote= select_vote.selected();
     const selected_positions = select_position.selected();
     const selected_groups = select_group.selected();
 
     const selected_meps = select_mep.selected();
+
+    vote_data = vote_data.filter(d => d['vote'] == selected_vote);
 
     if (selected_meps.length > 0 ) {
       select_position.disable();
