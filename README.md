@@ -1,8 +1,6 @@
-# Interactive visualization of EU parliament vote on Copyright reform 
+# Interactive visualization of EU parliament votes on Copyright reform
 
-On the 5th of July 2018, the European Parliament had to decide whether to confirm the Committee position on controversial Articles 11 and 13 of the proposal.
-
-This website offers an interactive visualization of the vote.
+This website offers an interactive visualization of some of the votes of the EU Parliament regarding Articles 11 and 13 of the Copyright Reform.
 
 A live version of this site is available at [https://jorquera.net/euparlvote/](https://jorquera.net/euparlvote/).
 
